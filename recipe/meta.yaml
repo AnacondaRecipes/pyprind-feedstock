@@ -1,6 +1,6 @@
 {% set name = "PyPrind" %}
-{% set version = "2.11.2" %}
-{% set sha256 = "c46cab453b805852853dfe29fd933aa88a2a516153909c695b098e9161a9e675" %}
+{% set version = "2.11.3" %}
+{% set sha256 = "e37dcab6e1a9c8e0a7f0fce65fde7a79e2deda1c75aa015910a49e2137b54cbf" %}
 
 package:
   name: {{ name|lower }}
@@ -13,7 +13,7 @@ source:
 
 build:
   number: 1005
-  script: python setup.py install --single-version-externally-managed --record record.txt
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
   build:
@@ -21,7 +21,9 @@ requirements:
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
   host:
     - python
+    - pip
     - setuptools
+    - wheel
   run:
     - python
     - psutil >=3.2.0
@@ -29,6 +31,10 @@ requirements:
 test:
   imports:
     - pyprind
+  requires:
+    - pip
+  commands:
+    - pip check
 
 about:
   home: https://github.com/rasbt/pyprind
@@ -40,7 +46,7 @@ about:
     The PyPrind (Python Progress Indicator) module provides a progress bar
     and a percentage indicator object that let you track the progress of a
     loop structure or other iterative computation.
-  doc_url: http://pythonhosted.org/PyPrind/
+  doc_url: https://pythonhosted.org/PyPrind/
   dev_url: https://github.com/rasbt/pyprind
 
 extra:
