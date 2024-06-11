@@ -1,4 +1,6 @@
 {% set name = "PyPrind" %}
+# XXX Technically, there is no git tag for 2.11.3 but the sole commit
+# since 2.11.2's CHANGELOG does indicate it is meant to be 2.11.3
 {% set version = "2.11.3" %}
 {% set sha256 = "e37dcab6e1a9c8e0a7f0fce65fde7a79e2deda1c75aa015910a49e2137b54cbf" %}
 
@@ -29,12 +31,16 @@ requirements:
     - psutil >=3.2.0
 
 test:
+  source_files:
+    - tests
   imports:
     - pyprind
   requires:
     - pip
+    - pytest
   commands:
     - pip check
+    - pytest -v tests
 
 about:
   home: https://github.com/rasbt/pyprind
