@@ -1,34 +1,45 @@
 {% set name = "PyPrind" %}
-{% set version = "2.11.2" %}
-{% set sha256 = "c46cab453b805852853dfe29fd933aa88a2a516153909c695b098e9161a9e675" %}
+# XXX Technically, there is no git tag for 2.11.3 but in the sole
+# commit since 2.11.2, 881fa94e, the CHANGELOG does indicate it is
+# meant to be 2.11.3
+{% set version = "2.11.3" %}
+{% set sha256 = "e37dcab6e1a9c8e0a7f0fce65fde7a79e2deda1c75aa015910a49e2137b54cbf" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.gz
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: {{ sha256 }}
 
 build:
-  number: 1005
-  script: python setup.py install --single-version-externally-managed --record record.txt
+  number: 0
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
-  build:
-    - python                                 # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
   host:
     - python
+    - pip
     - setuptools
+    - wheel
   run:
     - python
+  run_constrained:
     - psutil >=3.2.0
 
 test:
+  source_files:
+    - tests
   imports:
     - pyprind
+  requires:
+    - pip
+    - pytest
+    - psutil
+  commands:
+    - pip check
+    - pytest -v tests
 
 about:
   home: https://github.com/rasbt/pyprind
@@ -40,7 +51,7 @@ about:
     The PyPrind (Python Progress Indicator) module provides a progress bar
     and a percentage indicator object that let you track the progress of a
     loop structure or other iterative computation.
-  doc_url: http://pythonhosted.org/PyPrind/
+  doc_url: https://pythonhosted.org/PyPrind/
   dev_url: https://github.com/rasbt/pyprind
 
 extra:
