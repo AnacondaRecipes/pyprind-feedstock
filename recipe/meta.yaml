@@ -1,6 +1,7 @@
 {% set name = "PyPrind" %}
-# XXX Technically, there is no git tag for 2.11.3 but the sole commit
-# since 2.11.2's CHANGELOG does indicate it is meant to be 2.11.3
+# XXX Technically, there is no git tag for 2.11.3 but in the sole
+# commit since 2.11.2, 881fa94e, the CHANGELOG does indicate it is
+# meant to be 2.11.3
 {% set version = "2.11.3" %}
 {% set sha256 = "e37dcab6e1a9c8e0a7f0fce65fde7a79e2deda1c75aa015910a49e2137b54cbf" %}
 
@@ -9,18 +10,14 @@ package:
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.gz
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: {{ sha256 }}
 
 build:
-  number: 1005
+  number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
-  build:
-    - python                                 # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
   host:
     - python
     - pip
@@ -28,7 +25,8 @@ requirements:
     - wheel
   run:
     - python
-    - psutil >=3.2.0
+  run_constrained:
+    - psutil
 
 test:
   source_files:
@@ -38,6 +36,7 @@ test:
   requires:
     - pip
     - pytest
+    - psutil
   commands:
     - pip check
     - pytest -v tests
